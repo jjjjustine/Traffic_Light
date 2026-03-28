@@ -164,11 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ─── APPLY CONTROL STATE ──────────────────────────────────────
-  //
-  //  FIX 3: Removed the hardcoded 'GREEN' fallback. If AUTO mode
-  //          has no known status yet, the light stays neutral until
-  //          a log row or realtime event provides the real color.
-  //
   function applyControlState(mode, manualStatus, updatedAt) {
     // Reject calls before the initial DB fetch completes (e.g. stale
     // realtime events that arrive during the loading phase).
