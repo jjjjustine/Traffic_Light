@@ -202,8 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTrafficLight(currentStatus);
         startLocalCountdown();
       } else {
-        // No known status yet — stay neutral, countdown will start when
-        // the next INSERT arrives via subscribeRealtime()
         setNeutralLight();
         stopCountdown();
       }
