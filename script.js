@@ -81,11 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ─── NEUTRAL STATE (shown until first real DB data) ───────────
-  //
-  //  FIX 1: setNeutralLight now also locks out manual buttons and
-  //          resets all esp-info fields to '—'. Nothing is assumed.
-  //
+  // ─── NEUTRAL STATE (shown until first real DB data)
   function setNeutralLight() {
     if (lensRed)    lensRed.className    = 'tl-lens';
     if (lensYellow) lensYellow.className = 'tl-lens';
