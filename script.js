@@ -198,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTrafficLight(currentStatus);
         startLocalCountdown();
       } else if (currentStatus && VALID_COLORS.includes(currentStatus)) {
-        // AUTO → AUTO (e.g. page reload, subscription reconnect)
         updateTrafficLight(currentStatus);
         startLocalCountdown();
       } else {
