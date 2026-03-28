@@ -190,9 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (countdownBarFill) countdownBarFill.style.width = '0%';
 
     } else if (mode === 'AUTO') {
-      // Only start the countdown if we already know the current color.
-      // If coming from MANUAL with a valid status keep it; otherwise wait
-      // for the next realtime log INSERT to provide the real phase.
       if (prevMode === 'MANUAL' && currentStatus && VALID_COLORS.includes(currentStatus)) {
         updateTrafficLight(currentStatus);
         startLocalCountdown();
