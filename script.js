@@ -1,9 +1,3 @@
-// ═══════════════════════════════════════════════════════════════
-//  Smart Traffic Light — script.js  (production-ready)
-//  All values come from Supabase / ESP32 only.
-//  Nothing initializes until real data arrives.
-// ═══════════════════════════════════════════════════════════════
-
 document.addEventListener('DOMContentLoaded', () => {
 
   // ─── SUPABASE CREDENTIALS ─────────────────────────────────────
