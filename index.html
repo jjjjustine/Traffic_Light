@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Traffic Control — IoT Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- CDN libraries must load BEFORE script.js -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div id="loading">
+  <div class="loading-leds">
+    <div class="loading-led" id="ll-r"></div>
+    <div class="loading-led" id="ll-y"></div>
+    <div class="loading-led" id="ll-g"></div>
+  </div>
+  <span>INITIALIZING SYSTEM</span>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="logo-mark">
+      <span></span><span></span><span></span>
+    </div>
+    <div>
+      <div class="header-title">Smart Traffic Control</div>
+      <div class="header-sub">IoT DASHBOARD — ESP32 + SUPABASE</div>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <div class="status-dot" id="conn-dot"></div>
+    <span class="conn-label" id="conn-label">DISCONNECTED</span>
+  </div>
+</header>
+
+<!-- MAIN GRID -->
+<div class="grid-outer">
+
+  <!-- LEFT: TRAFFIC LIGHT PANEL -->
+  <div class="panel tl-panel">
+
+    <div class="section-label" style="width:100%">Live Simulation</div>
+
+    <div class="tl-housing">
+      <!-- All lenses start OFF — lit only after DB data arrives -->
+      <div class="tl-lens" id="lens-red"></div>
+      <div class="tl-lens" id="lens-yellow"></div>
+      <div class="tl-lens" id="lens-green"></div>
+    </div>
+    <div class="tl-pole"></div>
+
+    <div class="status-badge">
+      <!-- No default color class — filled from Supabase -->
+      <div class="status-color-label" id="status-label">—</div>
+    </div>
+
+    <div class="countdown-wrap">
+      <div class="countdown-label">Time Remaining</div>
+      <!-- No default number — filled from Supabase -->
+      <div class="countdown-value" id="countdown-val">—</div>
+      <div class="countdown-bar">
+        <!-- Bar starts empty — filled after DB confirms AUTO mode -->
+        <div class="countdown-bar-fill" id="countdown-bar-fill" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <div class="mode-section">
+      <div class="section-label">Mode Control</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active-auto" id="btn-auto"   onclick="setMode('AUTO')">⟳ AUTO</button>
+        <button class="mode-btn"             id="btn-manual" onclick="setMode('MANUAL')">⊙ MANUAL</button>
+      </div>
+
+      <div class="manual-controls hidden" id="manual-controls">
+        <div style="height:6px"></div>
+        <button class="ctrl-btn red-btn"    id="ctrl-red"    onclick="setManualLight('RED')">
+          <span class="ctrl-btn-dot"></span> RED LIGHT ON
+        </button>
+        <button class="ctrl-btn yellow-btn" id="ctrl-yellow" onclick="setManualLight('YELLOW')">
+          <span class="ctrl-btn-dot"></span> YELLOW LIGHT ON
+        </button>
+        <button class="ctrl-btn green-btn"  id="ctrl-green"  onclick="setManualLight('GREEN')">
+          <span class="ctrl-btn-dot"></span> GREEN LIGHT ON
+        </button>
+      </div>
+    </div>
+
+    <!-- All values are — until Supabase responds -->
+    <div class="esp-info" id="esp-info">
+      <div class="row"><span>MODE</span>        <span class="val"  id="ei-mode">—</span></div>
+      <div class="row"><span>ACTIVE LED</span>  <span class="val"  id="ei-led">—</span></div>
+      <div class="row"><span>LAST UPDATE</span> <span class="val"  id="ei-time">—</span></div>
+      <div class="row"><span>LOG COUNT</span>   <span class="val"  id="ei-count">—</span></div>
+    </div>
+
+  </div><!-- /tl-panel -->
+
+  <!-- RIGHT TOP: STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-card-label">Total Events</div>
+      <div class="stat-card-value" id="stat-total">—</div>
+      <div class="stat-card-sub">All logged state changes</div>
+      <div class="stat-bar-row">
+        <div class="stat-bar-seg" id="sb-r" style="background:var(--red);    height:3px; flex:1"></div>
+        <div class="stat-bar-seg" id="sb-y" style="background:var(--yellow); height:3px; flex:0"></div>
+        <div class="stat-bar-seg" id="sb-g" style="background:var(--green);  height:3px; flex:0"></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Auto Mode Events</div>
+      <div class="stat-card-value" id="stat-auto">—</div>
+      <div class="stat-card-sub">ESP32 timed sequences</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Manual Overrides</div>
+      <div class="stat-card-value" id="stat-manual">—</div>
+      <div class="stat-card-sub">Dashboard-triggered changes</div>
+    </div>
+  </div>
+
+  <!-- RIGHT BOTTOM: LOG TABLE + CHART -->
+  <div class="bottom-grid">
+
+    <!-- LOG TABLE -->
+    <div class="bottom-panel">
+      <div class="panel-header">
+        <span class="panel-title">Traffic Logs</span>
+        <span class="panel-badge" id="log-count-badge">— entries</span>
+      </div>
+      <div class="log-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Status</th>
+              <th>Mode</th>
+              <th>Dur (s)</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="log-tbody">
+            <tr>
+              <td colspan="5" style="color:var(--text-dim); padding:20px 0; text-align:center;
+                  font-family:var(--font-mono); font-size:0.72rem">
+                Connecting to Supabase…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="bottom-panel">
+      <div class="panel-header">
+        <span class="panel-title">Light Usage</span>
+        <span class="panel-badge">Last 20 events</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="usageChart"></canvas>
+      </div>
+    </div>
+
+  </div><!-- /bottom-grid -->
+
+</div><!-- /grid-outer -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
