@@ -104,12 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ─── NEUTRAL MODE UI (no button highlighted, controls hidden) ─
-  //
-  //  FIX 2: Don't call updateModeUI('AUTO') at boot. Instead use
-  //          setNeutralModeUI so no mode button appears active and
-  //          manual controls stay hidden before DB data arrives.
-  //
+  // ─── NEUTRAL MODE UI (no button highlighted, controls hidden)
   function setNeutralModeUI() {
     setClass('btn-auto',   'mode-btn');
     setClass('btn-manual', 'mode-btn');
