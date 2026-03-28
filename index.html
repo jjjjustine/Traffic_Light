@@ -60,7 +60,10 @@
     <div class="tl-pole"></div>
 
     <div class="status-badge">
-      <!-- No default color class — filled from Supabase -->
+      <!--
+        Signal word (GO / SLOW / STOP) is written here by script.js.
+        No default color class — applied only after Supabase responds.
+      -->
       <div class="status-color-label" id="status-label">—</div>
     </div>
 
@@ -77,8 +80,12 @@
     <div class="mode-section">
       <div class="section-label">Mode Control</div>
       <div class="mode-toggle">
-        <button class="mode-btn active-auto" id="btn-auto"   onclick="setMode('AUTO')">⟳ AUTO</button>
-        <button class="mode-btn"             id="btn-manual" onclick="setMode('MANUAL')">⊙ MANUAL</button>
+        <!--
+          Neither button has active-* class here.
+          script.js applies the correct class once DB data arrives.
+        -->
+        <button class="mode-btn" id="btn-auto"   onclick="setMode('AUTO')">⟳ AUTO</button>
+        <button class="mode-btn" id="btn-manual" onclick="setMode('MANUAL')">⊙ MANUAL</button>
       </div>
 
       <div class="manual-controls hidden" id="manual-controls">
