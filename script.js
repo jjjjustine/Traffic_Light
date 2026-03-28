@@ -194,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // If coming from MANUAL with a valid status keep it; otherwise wait
       // for the next realtime log INSERT to provide the real phase.
       if (prevMode === 'MANUAL' && currentStatus && VALID_COLORS.includes(currentStatus)) {
-        // Keep the last known color and let countdown run from it
         updateTrafficLight(currentStatus);
         startLocalCountdown();
       } else if (currentStatus && VALID_COLORS.includes(currentStatus)) {
