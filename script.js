@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── BOOT SEQUENCE ────────────────────────────────────────────
   setNeutralLight();
-  setNeutralModeUI();   // ← was: updateModeUI('AUTO')  ← root cause of green flash
+  setNeutralModeUI();
 
   initSupabase();       // fetches real state; all display flows from here
 
