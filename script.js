@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const COLOR_CSS    = { RED: 'var(--red)', YELLOW: 'var(--yellow)', GREEN: 'var(--green)' };
   const VALID_COLORS = ['RED', 'YELLOW', 'GREEN'];
 
-  // Human-friendly signal words shown above the countdown
   const SIGNAL_WORD  = { RED: 'STOP', YELLOW: 'SLOW', GREEN: 'GO' };
 
   // ─── SAFE DOM HELPERS ─────────────────────────────────────────
