@@ -530,4 +530,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initSupabase();       // fetches real state; all display flows from here
 
-}); // end DOMContentLoaded
+});
