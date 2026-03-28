@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentStatus = manualStatus;
         updateTrafficLight(currentStatus);
       } else {
-        // Manual mode but no valid color yet — stay neutral
+
         currentStatus = null;
         setNeutralLight();
       }
