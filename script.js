@@ -525,11 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ─── BOOT SEQUENCE ────────────────────────────────────────────
-  //
-  //  FIX 5: Boot into a fully neutral state. No mode button is
-  //          highlighted, no light is on, no countdown runs.
-  //          Everything waits for fetchControlState() to complete.
-  //
   setNeutralLight();
   setNeutralModeUI();   // ← was: updateModeUI('AUTO')  ← root cause of green flash
 
