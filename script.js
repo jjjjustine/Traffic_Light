@@ -273,11 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
           setText('ei-count', logEntries.length);
 
           // Sync traffic light & countdown from the real ESP32 log row.
-          //
-          //  FIX 4: Guard with dataLoaded so an early INSERT (race with
-          //         fetchControlState) cannot start the countdown before
-          //         the initial state is known.
-          //
           const { status, mode } = payload.new;
           if (!dataLoaded) return;
 
