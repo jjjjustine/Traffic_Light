@@ -23,9 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let dataLoaded      = false;  // true only after first successful DB fetch
   let toastTimer      = null;
 
-  const DURATIONS = { GREEN: 60, YELLOW: 5, RED: 30 };
-  const COLOR_CSS  = { RED: 'var(--red)', YELLOW: 'var(--yellow)', GREEN: 'var(--green)' };
+  const DURATIONS    = { GREEN: 60, YELLOW: 5, RED: 30 };
+  const COLOR_CSS    = { RED: 'var(--red)', YELLOW: 'var(--yellow)', GREEN: 'var(--green)' };
   const VALID_COLORS = ['RED', 'YELLOW', 'GREEN'];
+
+  // Human-friendly signal words shown above the countdown
+  const SIGNAL_WORD  = { RED: 'STOP', YELLOW: 'SLOW', GREEN: 'GO' };
 
   // ─── SAFE DOM HELPERS ─────────────────────────────────────────
   function $(id)           { return document.getElementById(id); }
@@ -331,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lensGreen)  lensGreen.className  = 'tl-lens' + (color === 'GREEN'  ? ' green-on'  : '');
 
     if (statusLabel) {
-      statusLabel.textContent = color;
+      statusLabel.textContent = SIGNAL_WORD[color] ?? color;
       statusLabel.className   = 'status-color-label ' + color;
     }
     if (countdownBarFill) {
@@ -347,6 +350,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     currentStatus = color;
+
+    // Always keep the ACTIVE LED panel in sync with the current color
+    setText('ei-led', color);
+    const eiLed = $('ei-led');
+    if (eiLed) eiLed.className = 'val ' + color.toLowerCase();
   }
 
   // ─── MODE UI ──────────────────────────────────────────────────
